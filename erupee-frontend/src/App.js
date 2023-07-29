@@ -1,10 +1,8 @@
 import './App.css';
-import HelloWorld from './HelloWorld/HelloWorld';
 import RegistrationForm from './UserRegistration/RegistrationForm';
 
 function App() {
   return (
-    <HelloWorld />,
     <RegistrationForm />
     // <div className="App">
     //   <header className="App-header">

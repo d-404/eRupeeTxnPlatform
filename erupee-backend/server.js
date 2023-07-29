@@ -1,26 +1,36 @@
-const express = require('express');
-const app = express();
-const port = 3000;
-const bodyPasrser = require('body-parser');
+const express = require('express')
+const cors = require('cors')
+const { Pool } = require('pg');
+const app = express()
 
-app.use(bodyPasrser.json);
+app.use(cors());
+app.use(express.json())
+
+const port = 5000;
+
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'Users',
+    password: 'root',
+    port: 5432, 
+  });
+
+
+app.post('/register', async (req, res) => {
+    const { name, email, password, balance } = req.body;
+  
+    try {
+      const query = 'INSERT INTO users (name, email, password, balance) VALUES ($1, $2, $3, $4)';
+      await pool.query(query, [name, email, password, balance]);
+      res.json({ message: 'Registration successful!' });
+    } catch (error) {
+      console.error('Error registering user:', error);
+      res.status(500).json({ error: 'Registration failed!' });
+    }
+});
+
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-app.get('/', (req, res) => {
-    res.send('Welcome to e₹ Platform!');
-});
-
-app.post('/register', (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const balance = req.body.balance;
-    const password = req.body.password;
-
-    res.send(`Registration request received: ${name}`);
-    if(emailExists) {
-        res.status(400).json({error: 'Email Id already exists!'});
-    }
+    console.log('Server running at port ' + port)
 });
